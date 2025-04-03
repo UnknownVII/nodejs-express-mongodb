@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Node.js Restful CRUD API with Express and MongoDB",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "start": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -27,6 +28,7 @@
     "dotenv": "^16.0.3",
     "ejs": "^3.1.8",
     "express": "^4.18.2",
+    "express-list-endpoints": "^7.1.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.6.7",
     "nodemon": "^2.0.20"

@@ -1,8 +1,11 @@
-const express = require('express');
+import express, { json, urlencoded } from "express";
 const app = express();
-const dotenv = require('dotenv');
-var cors = require('cors')
-const verify = require('./app/verify-token');
+import { config } from "dotenv";
+import cors from "cors";
+import verify from "./app/verify-token.js";
+import connectDB from "./app/config/db.config.js";
+import logEndpoints from "./utils/print-endpoints.js";
+import isRunningLocally from "./utils/check-local-server.js";
 
 //API CACHE
 // const apicache = require('apicache');
@@ -12,30 +15,44 @@ const verify = require('./app/verify-token');
 const port = process.env.PORT || 8080;
 
 //Import Routes
-const objectsRoute = require('./src/routes/objects');
+import objectsRoute from "./src/routes/objects.js";
 
-dotenv.config();
+config();
 
-app.listen(port, () => {
-    console.log('[Port    ] Server is running [', port, ']');
+async function isRunningAt() {
+  await isRunningLocally();
+  console.log(
+    `[\x1b[35mSERVER\x1b[0m  ] ${
+      global.isLocal
+        ? `Server is running locally: \x1b[32m\x1b[4m${process.env.LOCAL_URL}\x1b[0m`
+        : `Server is running at your cloud service: \x1b[32m\x1b[4m${process.env.CLOUD_URL}\x1b[0m`
+    }`
+  );
+}
+app.listen(port, async () => {
+  console.log(
+    `[\x1b[35mPORT\x1b[0m    ] Server is Listening to [ \x1b[33m${port}\x1b[0m ]`
+  );
+  logEndpoints(app);
+  isRunningAt();
 });
 
 //Connect to DB
-require('./app/config/db.config')();
+connectDB();
 
 //Middlewares
 app.use(cors());
 
 //content-type - application/json
-app.use(express.json());
+app.use(json());
 
-//ontent-type - application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: true }));
+//Content-type - application/x-www-form-urlencoded
+app.use(urlencoded({ extended: true }));
 
 // simple route
 app.get("/", verify, (req, res) => {
-    res.json({ message: "HELLO WORLDOOO" });
+  res.json({ message: "HELLO WORLDOOO" });
 });
 
 //Route Middleware
-app.use('/test', objectsRoute);
+app.use("/test", objectsRoute);

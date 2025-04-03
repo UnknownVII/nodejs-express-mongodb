@@ -1,16 +1,14 @@
-const Joi = require('@hapi/joi');
+import pkg from "@hapi/joi";
+const { object, string } = pkg;
 
 //OBJECT VALIDATION
 const objectValidation = (data) => {
-    const schema = Joi.object({
-        first_name: Joi.string()
-            .min(3)
-            .required(),
-        last_name: Joi.string()
-            .min(3)
-            .required(),
-    });
-    return schema.validate(data);
-}
+  const schema = object({
+    first_name: string().min(3).required(),
+    last_name: string().min(3).required(),
+  });
+  return schema.validate(data);
+};
 
-module.exports.objectValidation = objectValidation;
+const _objectValidation = objectValidation;
+export { _objectValidation as objectValidation };

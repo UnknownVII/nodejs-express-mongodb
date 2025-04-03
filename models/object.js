@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
-const ObjectSchema = new mongoose.Schema({
+const ObjectSchema = new Schema({
     first_name: {
         type: String,
         required:true,
@@ -15,4 +15,4 @@ const ObjectSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('objects', ObjectSchema);
+export default model('objects', ObjectSchema);
